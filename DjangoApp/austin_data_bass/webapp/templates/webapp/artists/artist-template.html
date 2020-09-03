@@ -1,0 +1,89 @@
+{% extends "webapp/navbar.html" %}
+{% load static %}
+<!-- This page now imports the navbar from the template... -->
+{% block head %}
+{% endblock head %}
+
+<!--            name = models.CharField(max_length=25)
+    spotifyID = models.CharField(max_length=30)
+    imageLink = models.CharField(max_length=55)
+    bio = models.CharField(max_length=500)
+    genres = models.CharField(max_length=150) #will be a json list of genres
+    popularity = models.IntegerField()
+    followers = models.IntegerField()
+    topTracks = models.CharField(max_length=150) #will be a json list of tracks with their corresponding popularity -->
+<!-- Passing in ARTIST as the dictionary with all fields -->
+{% block body %}
+    <div class="container-fluid">
+       <br><br>  
+        <div class="mb-5 text-body text-center ml-lg-5 mr-lg-5">
+            <div class="card border-warning border-size-5">
+                <div class="card-body">
+                    <div class="row">
+                       <div class="pt-4 col-sm-3">
+                           <img class="artist-image" id="artistImage" src="{{ artist.imageLink }}">
+                       </div>
+                       <div class="col-lg-8">
+                          <h1 class="text-left pt-2 pb-2 font-weight-bold" id="artistName">{{ artist.name }}</h1>
+                          <h4 class="card-subtitle text-left mb-2 text-muted">Artist Bio</h4>
+                            <p class="card-text text-left pr-2" id="artistInfo">
+                                {{ artist.bio }}
+                            </p> 
+                       </div>
+                       
+                    </div>
+                    <br>
+                    
+                    <hr>
+                    <h4 class="card-subtitle text-left pl-2 mb-3">
+                    <a href="{{artist.spotifyLink}}" class="text-muted">
+                    Artist On Spotify <i style="color: grey" class="fab fa-spotify"></i>
+                    </a></h4>
+                    <div class ="row text-center">
+                        <div class="col-xs-6 col-sm-6 col-md-6 ">
+                            <ul class="list group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Genres
+                                    <span class="text-muted" id="artistGenres">{{genre}}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Popularity
+                                    <span class="text-muted" id="artistPopularity">{{artist.popularity}}%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Followers
+                                    <span class="text-muted" id="artistFollowers">{{artist.followers}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 ">
+                            <ul type="1" class="list group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{ artist.track1 }}</span>
+                                    
+                                    <span class="text-muted">{{artist.track1popularity}}%</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span> {{artist.track2}}</span>
+                                    <span class="text-muted">{{artist.track2popularity}}%</span></li></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span> {{artist.track3}}</span>
+                                    <span class="text-muted">{{artist.track3popularity}}%</span></li></li>
+                            </ul>
+                        </div>
+                </div>
+                <hr>
+                <h4 class="card-subtitle text-left pl-2 mb-3 text-muted">Upcoming Concerts in Austin</h4>
+                <div class ="row text-center">
+                    <div class="col-xs-8 col-sm-8 col-md-8 ">
+                        <ul class="list group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="../../concerts/{{artist.upcomingConcert}}">{{artist.upcomingConcert}} </a>
+                                <span class="text-muted" id="concertDate">{{date}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

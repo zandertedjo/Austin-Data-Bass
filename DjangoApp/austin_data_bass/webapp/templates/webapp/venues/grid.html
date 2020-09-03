@@ -1,0 +1,115 @@
+{% extends "webapp/navbar.html" %}
+{% load static %}
+{% load tags %}
+<!-- This page now imports the navbar from the template... -->
+{% block head %}
+{% endblock head %}
+
+{% block body %}
+    <div class="container-fluid text-body px-0">
+        <div class="card p-2" style="border-radius: 0px;">
+            <div class="row">
+                <div class="col-5 text-left"> <!-- Popularity -->
+                    <form class="form-inline" name="filterFormGenre" action="" method="get">
+                        <select class="form-control form-dropdown btn-warning p-1" name="rating">
+                           <option selected disabled>Venue Rating (Minimum)</option> 
+                           <option>0</option>
+                           <option>1.0</option>
+                           <option>2.0</option>
+                           <option>3.0</option>
+                           <option>4.0</option>
+                        </select>
+                        <select class="form-control form-dropdown btn-warning p-1" name="cost"> 
+                            <option selected disabled>Cost</option> 
+                            <option>$</option>
+                            <option>$$</option>
+                            <option>$$$</option>
+                            <option>$$$$</option>
+                        </select>
+                        <input class="form-control btn-warning p-1 ml-1" type="submit" value="Apply">
+                    </form>  
+                </div> <!-- End popularity -->
+                <div class="col-2 text-center">
+                    <button class="btn-warning form-reset form-control" onclick="window.location.href ={% url 'webapp-venues' %}">Reset</button>
+                </div>
+                <div class="col-5 text-right">
+                    <form class="form-inline" name="artist-sort" action="" method="get">
+                        <select class="form-control form-dropdown btn-warning p-1" name="sort-select-venues">
+                            <option selected disabled>Sort Page By</option>
+                            <option>Venue Name (A-Z)</option>
+                            <option>Venue Name (Z-A)</option>
+                            <option>Yelp Rating (High to Low)</option>
+                            <option>Yelp Rating (Low to High)</option>
+                            <option>Price (Low to High)</option>
+                            <option>Price (High to Low)</option>
+                        </select>
+                        <input class="form-control btn-warning p-1 ml-1" type="submit" value="Apply">
+                    </form>
+                </div>
+            </div> <!-- End filtering row -->
+         </div>
+    </div>
+    <div class="container-fluid">
+        <h1 class="pt-5 pb-5 text-center font-weight-bold display-3">{{model_name}}</h1> <!-- Pass in model_name during context and it will display! -->
+
+        <!-- Start of instance cards -->
+        <div class="row mr-2 ml-2">
+            {% for instance in venues %}
+                <div class="col-sm-12 col-lg-4 col-md-4 col-4  mb-4">
+                    <a href="{{instance.name}}">
+                    <div class="card text-body h-100">
+                        <div class="card-header font-weight-bold display text-center">
+                            <!-- Insert the link to the instance here? -->
+                            {{ instance.name }}
+                        </div>
+                        <!-- Instance Image, still need to figure out how to handle this... -->
+                        <img class="card-img" src="{{ instance.imageURL }}" style="height: 400px;" alt= {{ instance.imageLink }}>
+                        <!-- At least 3 attributes -->
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex align-items-start">
+                                <span><b>Rating:  </b> {{ instance.rating }}</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <span><b>Location:  </b> 
+                                        {{ instance.location }}
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <span><b>Phone:</b> {{ instance.phone }}</span>
+                            </li>
+                        </ul>
+                    </div> <!-- End of card -->
+                    </a>
+                </div> <!-- End of Col Div -->
+            {% endfor %}
+        </div> <!-- End of the row div -->
+        <!-- END OF THE GRID -->
+
+        <!-- Search, filter and pagination features go here -->
+        <div class="card-footer text-muted mx-5">
+            <!--<input class="form-control mb-3"  type="text" id="searchBar" onkeyup="search()" placeholder="Search for Instance">-->
+        <!--<ul class="pagination justify-content-center>
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul> -->
+            <div class="pagination justify-content-center">
+                {% if venues.has_previous %}
+                    <a class="page-link" href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
+                    <a class="page-link" href="?{% url_replace request 'page' venues.previous_page_number %}">previous</a>
+                {% endif %}
+
+                {% if venues.has_next %}
+                    <a class="page-link" href="?{% url_replace request 'page' venues.next_page_number %}">next</a>
+                    <a class="page-link" href="?{% url_replace request 'page' venues.paginator.num_pages %}">last &raquo;</a>
+                {% endif %}
+                <br>
+                <p class="current ml-5">
+                       Page {{ venues.number }} of {{ venues.paginator.num_pages }}.
+                </p>
+            </div>
+        </div>
+    </div> <!--End of fluid container -->
+{% endblock body %}

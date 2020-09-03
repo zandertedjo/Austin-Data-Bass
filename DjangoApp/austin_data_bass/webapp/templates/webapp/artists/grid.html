@@ -1,0 +1,114 @@
+{% extends "webapp/navbar.html" %}
+{% load static %}
+{% load tags %}
+<!-- This page now imports the navbar from the template... -->
+{% block head %}
+<style>
+
+</style>
+{% endblock head %}
+
+
+{% block body %}
+    <div class="container-fluid text-body px-0">
+        <div class="card p-2 " style="border-radius: 0px;" >
+            <div class="row">
+                <div class="col-5 text-left form-inline"> <!-- Filtering Side of the Card -->
+                    <form name="filterFormGenre" action="" method="get"> <!-- Drop Downs -->
+                        <select class="form-control form-dropdown btn-warning p-1" name="popularity">  
+                           <option selected disabled>Popularity (Minimum)</option>
+                           <option>0</option>
+                           <option>20</option>
+                           <option>40</option>
+                           <option>50</option>
+                           <option>60</option>
+                           <option>80</option>
+                        </select>
+                        <select class="form-control form-dropdown btn-warning p-1" name="genre"> 
+                            <option selected disabled>Genre</option>
+                            <option>All</option>
+                            <option>Rock</option>
+                            <option>Rap</option>
+                            <option>Pop</option>
+                            <option>Country</option>
+                            <option>Electronic</option>
+                            <option>Jazz</option>
+                        </select>
+                        <input class="form-control btn-warning p-1" type="submit" value="Apply">
+                    </form>
+                </div> <!-- End Filtering Side of card -->
+                <div class="col-2">
+                    <button class="btn-warning form-reset form-control" onclick="window.location.href ={% url 'webapp-artists' %}">Reset</button>
+                </div>
+                <div class ="col-5 text-right">
+                    <form class="form-inline" name="artist-sort" action="" method="get">
+                        <select class="form-control form-dropdown btn-warning p-1" name="sort-select-artists">
+                            <option selected disabled>Sort Page By</option>
+                            <option>Popularity (Decending)</option>
+                            <option>Popularity (Acending)</option>
+                            <option>Name (A-Z)</option>
+                            <option>Name (Z-A)</option>
+                            <option>Followers (Decending)</option>
+                            <option>Followers (Acending)</option>
+                        </select>
+                        <input class="form-control btn-warning p-1 ml-1" type="submit" value="Apply">
+                    </form>
+                </div>
+             </div>
+         </div>
+    </div>
+    <div class="container-fluid">
+        <h1 class="pt-5 pb-5 text-center font-weight-bold display-3">{{model_name}}</h1> <!-- Pass in model_name during context and it will display! -->
+        <!-- Start of instance cards -->
+        <div class="row mr-2 ml-2">
+            {% for instance in artists %}
+                <div class="col-sm-12 col-lg-4 col-md-4 col-4  mb-4">
+                    <a href="{{instance.name}}">
+                    <div class="card text-body h-100" href="#">
+                        <div class="card-header font-weight-bold display text-center">
+                            <!-- Insert the link to the instance here? -->
+                            {{ instance.name }}
+                        </div>
+                        <!-- Instance Image, still need to figure out how to handle this... -->
+                        <img class="card-img" style="height: 400px;" src="{{ instance.imageLink }}" alt= {{ instance.imageLink }}>
+                        <!-- At least 3 attributes -->
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex align-items-start">
+                                <span><b>Popularity:  </b> {{ instance.popularity }}%</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <span><b>Top Track:  </b> 
+                                        {{ instance.track1 }}
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <span><b>Followers:</b> {{ instance.followers }}</span>
+                            </li>
+                        </ul>
+                    </div> <!-- End of card -->
+                </a>
+                </div> <!-- End of Col Div -->
+            {% endfor %}
+        </div> <!-- End of the row div -->
+        <!-- END OF THE GRID -->
+
+        <!-- Pagination -->
+        <div class="card-footer text-muted mx-5">
+            <div class="pagination justify-content-center">
+                {% if artists.has_previous %}
+                    <a class="page-link" href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
+                    <a class="page-link" href="?{% url_replace request 'page' artists.previous_page_number %}">previous</a>
+                {% endif %}
+
+                {% if artists.has_next %}
+                    <a class="page-link" href="?{% url_replace request 'page' artists.next_page_number %}">next</a>
+                    <a class="page-link" href="?{% url_replace request 'page' artists.paginator.num_pages %}">last &raquo;</a>
+                {% endif %}
+                <br>
+                    <p class="current ml-5">
+                           Page {{ artists.number }} of {{ artists.paginator.num_pages }}.
+                    </p>
+            </div>
+        </div> <!-- End of card footer -->
+    </div> <!--End of fluid container -->
+{% endblock body %}
